@@ -1,0 +1,35 @@
+version: "3.3"
+
+networks:
+  wp:
+    external: true
+
+services:
+  db:
+    image: mariadb:latest
+    networks:
+      - wp
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wordpress:
+    image: wordpress:latest
+    networks:
+      - wp
+    ports:
+      - "8080:80"
+    volumes:
+      - ./volumes/html:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DEBUG: "false"
+      #FS_METHOD: direct
